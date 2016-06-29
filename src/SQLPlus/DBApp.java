@@ -1,4 +1,8 @@
 package SQLPlus;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -44,13 +48,33 @@ public class DBApp {
 			}
 			if (query.split(" ")[0].equalsIgnoreCase("select")) {
 				Map<Integer,List<String>> map = DBUtility.selectData(query, params, types, userName, pwd);
-				for(int y=0; y<map.keySet().size();y++) {
+				for(int y=0; y<10;y++) {
 					for (String s: map.get(y)) {
 						System.out.printf("%s\t",s);
 					}
 					System.out.println();
 				}
-			} else {
+				if (map.keySet().size() >10) {
+					File file = new File("Data");
+					if(!file.exists()) {
+						try {
+							file.createNewFile();
+							FileWriter fwr = new FileWriter(file);
+							BufferedWriter bwr = new BufferedWriter(fwr);
+							for(int y=0; y<map.keySet().size();y++) {
+								for (String s: map.get(y)) {
+									bwr.write(s+ "\t");
+								}
+								bwr.write("\n");
+							}
+							bwr.close();
+							fwr.close();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+ 			} else {
 				int res = DBUtility.updateData(query, params, types, userName, pwd);
 				if (res ==0) {
 					System.out.println("No row changed");
