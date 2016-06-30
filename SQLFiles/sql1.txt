@@ -1,0 +1,1 @@
+|1|select a.firstname from customers a inner join companies b on a.customerid= b.companyid where a.customerid =?|jj|select * from customers where rownum <5
